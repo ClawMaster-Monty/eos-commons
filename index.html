@@ -220,6 +220,60 @@
       border-color: var(--accent);
     }
 
+    /* ── Signup Form ──────────────── */
+    .signup-form {
+      display: flex;
+      gap: 0.6rem;
+      max-width: 420px;
+      margin-top: 1.25rem;
+    }
+
+    .signup-form input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.7rem 1rem;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .signup-form input:focus {
+      border-color: var(--accent);
+    }
+
+    .signup-form input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .signup-form button {
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.7rem 1.4rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+
+    .signup-form button:hover {
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .signup-confirmation {
+      display: none;
+      color: var(--green);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+
     /* ── Footer ───────────────────── */
     footer {
       text-align: center;
@@ -365,6 +419,22 @@
 
   <hr class="divider">
 
+  <!-- ════════════ SIGNUP ══════════ -->
+  <section id="signup">
+    <h2>Get <span>Notified</span></h2>
+    <p style="color:var(--text-muted);margin-bottom:1rem;font-size:0.95rem;">
+      EOS Commons is in its founding member phase. Drop your email and we'll let you know
+      when we open the doors — no spam, no funnels, no nonsense.
+    </p>
+    <form class="signup-form" id="email-form" onsubmit="handleSignup(event)">
+      <input type="email" id="email" placeholder="you@example.com" required>
+      <button type="submit">Notify Me</button>
+    </form>
+    <p class="signup-confirmation" id="confirmation">✓ You're on the list. We'll be in touch.</p>
+  </section>
+
+  <hr class="divider">
+
   <!-- ════════════ ABOUT ═══════════ -->
   <section>
     <h2>About <span>the Name</span></h2>
@@ -388,6 +458,18 @@
   </div>
   <p>EOS Commons &copy; 2026 · Built for the curious, not the crowd.</p>
 </footer>
+
+<script>
+  function handleSignup(event) {
+    event.preventDefault();
+    const email = document.getElementById('email').value;
+    const confirmation = document.getElementById('confirmation');
+    // TODO: Wire to AgentMail API when configured
+    console.log('Signup:', email);
+    document.querySelector('.signup-form').style.display = 'none';
+    confirmation.style.display = 'block';
+  }
+</script>
 
 </body>
 </html>
