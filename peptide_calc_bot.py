@@ -27,6 +27,19 @@ PEPTIDES = {
     "tirzepatide": {"name": "Tirzepatide"},
 }
 
+STANDARD_DOSES = {
+    "bpc-157": "**BPC-157**\nStandard: **250–500 mcg** daily\nTiming: Fasted, morning or pre-bed\nCycle: 4–6 weeks, 2 weeks off",
+    "tb-500": "**TB-500**\nStandard: **2.5 mg** twice weekly\nTiming: Any time, ~3.5 days apart\nCycle: 4–6 weeks, 2 weeks off",
+    "cjc-1295": "**CJC-1295 (no DAC)**\nStandard: **100–300 mcg** daily\nTiming: Fasted, 1–2h after last meal (bedtime ideal)\nCycle: 8–12 weeks, 4 weeks off\n\n💡 Often stacked with Ipamorelin — see `!calc cjc+ipa`",
+    "ipamorelin": "**Ipamorelin**\nStandard: **100–300 mcg** daily\nTiming: Fasted, 1–2h after last meal (bedtime ideal)\nCycle: 8–12 weeks, 4 weeks off\n\n💡 Often stacked with CJC-1295 — see `!calc cjc+ipa`",
+    "pt-141": "**PT-141 (Bremelanotide)**\nStandard: **1–2 mg** as needed\nTiming: 45–60 min before activity\nLimit: Max 8x per month",
+    "ghk-cu": "**GHK-Cu**\nStandard: **1–3 mg** daily\nTiming: Any time\nCycle: Can be run continuously",
+    "kpv": "**KPV**\nStandard: **200–500 mcg** daily\nTiming: Any time\nCycle: 4–6 weeks, 2 weeks off",
+    "retatrutide": "**Retatrutide (GLP-1/GIP/Glucagon)**\nStarting: **0.5 mg** weekly\nTitrate: +0.5–1 mg every 2–4 weeks\nMax: **4 mg** weekly\nTiming: Any day, same day each week",
+    "semaglutide": "**Semaglutide**\nStarting: **0.25 mg** weekly (4 weeks)\nTitrate: 0.5 → 1.0 → 1.7 → 2.4 mg\nMax: **2.4 mg** weekly\nTiming: Any day, same day each week",
+    "tirzepatide": "**Tirzepatide (GLP-1/GIP)**\nStarting: **2.5 mg** weekly (4 weeks)\nTitrate: 2.5 → 5 → 7.5 → 10 → 12.5 → 15 mg\nMax: **15 mg** weekly\nTiming: Any day, same day each week",
+}
+
 def get_headers():
     return {"Authorization": f"Bearer {NOTION_KEY}", "Notion-Version": "2025-09-03", "Content-Type": "application/json"}
 
@@ -61,7 +74,7 @@ async def on_message(message):
     if not args: await message.channel.send(f"Use `!calc help` for options.{DISCLOSURE}"); return
     cmd, user = args[0].lower(), str(message.author)
     if cmd == "help":
-        await message.channel.send("**EOS Peptide Calculator**\n\n`!calc list` - Show all peptides\n`!calc dosage <peptide> <dose_mcg> [weight_kg]` - Dosage calculator\n`!calc recon <peptide> <vial_mg> <water_ml>` - Reconstitution\n`!calc inject <units>` - Units to mL\n`!calc klow [standard|intensive]` - KLOW blend\n`!calc wolverine [standard|intensive]` - Wolverine Stack\n"+DISCLOSURE); return
+        await message.channel.send("**EOS Peptide Calculator**\n\n`!calc list` - Show all peptides\n`!calc <peptide>` - Standard dose quick reference\n`!calc dosage <peptide> <dose_mcg> [weight_kg]` - Dosage calculator\n`!calc recon <peptide> <vial_mg> <water_ml>` - Reconstitution\n`!calc inject <units>` - Units to mL\n`!calc cjc+ipa [standard|intensive]` - CJC-1295 + Ipamorelin blend\n`!calc klow [standard|intensive]` - KLOW blend\n`!calc wolverine [standard|intensive]` - Wolverine Stack\n"+DISCLOSURE); return
     if cmd == "list":
         lines = ["**Peptides:**"] + [f"  • {v['name']} ({k})" for k,v in PEPTIDES.items()]
         await message.channel.send("\n".join(lines)+"\n\n**Blends:**\n  • KLOW (klow)\n  • Wolverine (wolverine)"+DISCLOSURE); return
@@ -111,6 +124,20 @@ async def on_message(message):
             log_to_notion("Dosage",pname,f"{dose} mcg / {wt or 'N/A'} kg",f"{units:.1f} units","units",user)
             await message.channel.send(r+DISCLOSURE)
         except: await message.channel.send(f"Usage: `!calc dosage <peptide> <dose_mcg> [weight_kg]` e.g. `!calc dosage bpc-157 300 80`{DISCLOSURE}"); return
+    if cmd == "cjc+ipa":
+        dose = args[1].lower() if len(args)>1 else "standard"
+        if dose == "intensive":
+            r = ("**CJC-1295 + Ipamorelin — Intensive Dose**\nReconstitution: 2mL BA water per 5mg/5mg vial\n"
+                 "Each **10 units (0.1mL)** contains:\n  • CJC-1295: **250 mcg**\n  • Ipamorelin: **250 mcg**\n"
+                 "Timing: Fasted, bedtime ideal\nCycle: 8–12 weeks, 4 weeks off")
+        else:
+            r = ("**CJC-1295 + Ipamorelin — Standard Dose**\nReconstitution: 2mL BA water per 5mg/5mg vial\n"
+                 "Each **5 units (0.05mL)** contains:\n  • CJC-1295: **125 mcg**\n  • Ipamorelin: **125 mcg**\n"
+                 "Timing: Fasted, bedtime ideal\nCycle: 8–12 weeks, 4 weeks off")
+        log_to_notion("Blend","CJC-1295 + Ipamorelin",f"CJC+IPA {dose}","125/125 or 250/250 mcg","5–10 units",user)
+        await message.channel.send(r+DISCLOSURE); return
+    if cmd in STANDARD_DOSES:
+        await message.channel.send(STANDARD_DOSES[cmd]+DISCLOSURE); return
     await message.channel.send(f"Unknown command. Use `!calc help` for options.{DISCLOSURE}")
 
 client.run(TOKEN)
