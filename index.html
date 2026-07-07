@@ -274,6 +274,39 @@
       margin-top: 0.5rem;
     }
 
+    /* ── Share ────────────────────── */
+    .share-section {
+      text-align: center;
+    }
+
+    .share-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.55rem 1.1rem;
+      font-size: 0.85rem;
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+
+    .share-btn:hover {
+      border-color: var(--accent);
+    }
+
     /* ── Footer ───────────────────── */
     footer {
       text-align: center;
@@ -448,6 +481,22 @@
     </p>
   </section>
 
+  <hr class="divider">
+
+  <!-- ════════════ SHARE ═══════════ -->
+  <section class="share-section">
+    <h2>Share <span>EOS Commons</span></h2>
+    <p style="color:var(--text-muted);font-size:0.9rem;">
+      Know someone who belongs here? Send them our way.
+    </p>
+    <div class="share-buttons">
+      <button class="share-btn" onclick="copyLink()">🔗 Copy Link</button>
+      <a class="share-btn" href="https://twitter.com/intent/tweet?text=EOS+Commons+%E2%80%94+a+private+longevity+community+at+the+intersection+of+precision+science+and+mindful+living.&url=https://clawmaster-monty.github.io/eos-commons/" target="_blank">𝕏 Share</a>
+      <a class="share-btn" href="https://bsky.app/intent/compose?text=EOS+Commons+%E2%80%94+private+longevity+community.+Precision+science.+Mindful+living.+Dawn+is+the+reset.&url=https://clawmaster-monty.github.io/eos-commons/" target="_blank">🦋 BlueSky</a>
+    </div>
+    <p id="copy-confirm" style="color:var(--green);font-size:0.85rem;margin-top:0.6rem;display:none;">Link copied!</p>
+  </section>
+
 </div>
 
 <!-- ════════════ FOOTER ════════════ -->
@@ -469,6 +518,13 @@
     console.log('Signup:', email);
     document.querySelector('.signup-form').style.display = 'none';
     confirmation.style.display = 'block';
+  }
+
+  function copyLink() {
+    navigator.clipboard.writeText('https://clawmaster-monty.github.io/eos-commons/');
+    const msg = document.getElementById('copy-confirm');
+    msg.style.display = 'block';
+    setTimeout(() => msg.style.display = 'none', 2000);
   }
 </script>
 
