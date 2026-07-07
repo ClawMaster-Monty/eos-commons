@@ -464,7 +464,8 @@
     event.preventDefault();
     const email = document.getElementById('email').value;
     const confirmation = document.getElementById('confirmation');
-    // TODO: Wire to AgentMail API when configured
+    // TODO: Wire to AgentMail API — POST signup to eoscommunity@agentmail.to
+    // API key stored in ~/AppData/Local/hermes/.env (AGENTMAIL_API_KEY)
     console.log('Signup:', email);
     document.querySelector('.signup-form').style.display = 'none';
     confirmation.style.display = 'block';
