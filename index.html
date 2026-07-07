@@ -459,11 +459,14 @@
       EOS Commons is in its founding member phase. Drop your email and we'll let you know
       when we open the doors — no spam, no funnels, no nonsense.
     </p>
-    <form class="signup-form" id="email-form" onsubmit="handleSignup(event)">
-      <input type="email" id="email" placeholder="you@example.com" required>
+    <form class="signup-form" action="https://formsubmit.co/eoscommunity@agentmail.to" method="POST">
+      <input type="hidden" name="_subject" value="New EOS Signup">
+      <input type="hidden" name="_next" value="https://clawmaster-monty.github.io/eos-commons/?signedup=true">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="email" name="email" placeholder="you@example.com" required>
       <button type="submit">Notify Me</button>
     </form>
-    <p class="signup-confirmation" id="confirmation">✓ You're on the list. We'll be in touch.</p>
+    <p class="signup-confirmation" id="confirmation" style="display:none">✓ You're on the list. We'll be in touch.</p>
   </section>
 
   <hr class="divider">
@@ -509,15 +512,10 @@
 </footer>
 
 <script>
-  function handleSignup(event) {
-    event.preventDefault();
-    const email = document.getElementById('email').value;
-    const confirmation = document.getElementById('confirmation');
-    // TODO: Wire to AgentMail API — POST signup to eoscommunity@agentmail.to
-    // API key stored in ~/AppData/Local/hermes/.env (AGENTMAIL_API_KEY)
-    console.log('Signup:', email);
+  // Show confirmation on redirect return from FormSubmit
+  if (window.location.search.includes('signedup=true')) {
     document.querySelector('.signup-form').style.display = 'none';
-    confirmation.style.display = 'block';
+    document.getElementById('confirmation').style.display = 'block';
   }
 
   function copyLink() {
